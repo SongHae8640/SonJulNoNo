@@ -44,8 +44,8 @@ class UserInfoRepositoryTest {
         UserInfo newUserInfo = userInfoRepository.save(userInfo);
         assertThat(newUserInfo).isNotNull();
 
-        Optional<UserInfo> byId = userInfoRepository.findById(newUserInfo.getId());
-        UserInfo existUserInfo = byId.get();
+        Optional<UserInfo> optUserInfo = userInfoRepository.findById(newUserInfo.getId());
+        UserInfo existUserInfo = optUserInfo.get();
         assertThat(existUserInfo).isNotNull();
 
         UserInfo nonExistUserInfo = userInfoRepository.findByName("hea Song");

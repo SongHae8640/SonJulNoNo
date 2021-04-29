@@ -3,6 +3,7 @@ package com.sjnono.user;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserInfoService {
@@ -25,5 +26,10 @@ public class UserInfoService {
         return newUserInfo;
 
 
+    }
+
+    public UserInfo findById(Long id) {
+        Optional<UserInfo> optionalUserInfo = this.userInfoRepository.findById(id);
+        return optionalUserInfo.get();
     }
 }
