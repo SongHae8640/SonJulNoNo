@@ -40,18 +40,7 @@ class UserInfoControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @Autowired
-    DataSource dataSource;
 
-
-    @Test
-    @Order(1)
-    public void showDbConnecionInfo() throws SQLException {
-        DatabaseMetaData metaData = dataSource.getConnection().getMetaData();
-        System.out.println(metaData.getURL());
-        System.out.println(metaData.getDriverName());
-        System.out.println(metaData.getUserName());
-    }
 
     @Test
     @Order(2)

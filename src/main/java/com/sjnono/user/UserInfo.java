@@ -1,22 +1,21 @@
 package com.sjnono.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity
-@Data
+@Entity(name = "USER_INFO")
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class UserInfo {
 
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String password;

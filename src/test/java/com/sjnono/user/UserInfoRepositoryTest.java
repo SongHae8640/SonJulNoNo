@@ -12,7 +12,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-//@ExtendWith(SpringExtension.class)
 //@DataJpaTest
 @SpringBootTest
 class UserInfoRepositoryTest {
@@ -36,10 +35,11 @@ class UserInfoRepositoryTest {
 
     @Test
     public void insertUserInfo() {
-        UserInfo userInfo = new UserInfo();
-        userInfo.setName("Song Hae");
-        userInfo.setPassword("1234");
-        userInfo.setEmail("test@naver.com");
+        UserInfo userInfo = UserInfo.builder()
+                .name("Song Hae")
+                .password("1234")
+                .email("test@naver.com")
+                .build();
 
         UserInfo newUserInfo = userInfoRepository.save(userInfo);
         assertThat(newUserInfo).isNotNull();
