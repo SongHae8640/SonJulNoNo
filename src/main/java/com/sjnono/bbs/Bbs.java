@@ -1,34 +1,28 @@
 package com.sjnono.bbs;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.sjnono.user.UserInfo;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-@Data @AllArgsConstructor @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity(name = "board")
+@Entity(name = "BOARD")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Bbs {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long articleId;
-    private String userId;
-    private String articleTitle;
-    private String articleDetail;
-    private String articleHits;
-    private String articleRecommend;
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public Long getId() {
-        return id;
-    }
+    @ManyToOne
+    @JoinColumn(name = "USER_INFO_ID")
+    private UserInfo userInfo;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private String title;
+    private String content;
+    private long hits;
+
 }
