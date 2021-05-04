@@ -1,32 +1,21 @@
 package com.sjnono.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import javax.sql.DataSource;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
-
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 //@WebMvcTest(UserInfoController.class)
@@ -43,28 +32,48 @@ class UserInfoControllerTest {
 
 
     @Test
-    @Order(2)
-    public void insertUserInfo() throws Exception{
-        //test 데이터
-        UserInfo userInfo = UserInfo.builder()
-                .id(0L)
+    public void joinNewUserInfo() throws Exception{
+        //신규 데이터
+        UserInfoDto userInfoDto = UserInfoDto.builder()
                 .email("test@gmail.com")
                 .name("Song")
                 .password("1234")
+                .rePassword("1234")
                 .build();
 
 
         ResultActions actions = mockMvc.perform(post("/user")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(userInfo)))
+                            .content(objectMapper.writeValueAsString(userInfoDto)))
                             ;
 
-        actions.andExpect(status().isFound())
-                .andExpect(redirectedUrl("/user/1"));
+        actions.andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(redirectedUrl("http://localhost/user/3"));
     }
 
     @Test
-    @Order(3)
+    public void joinExistUserInfo() throws Exception{
+        //기존 데이터
+        UserInfoDto userInfoDto = UserInfoDto.builder()
+                .email("1@naver.com")   //회원 가입한 email
+                .name("Song")
+                .password("1234")
+                .rePassword("1234")
+                .build();
+
+
+        ResultActions actions = mockMvc.perform(post("/user")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userInfoDto)))
+                ;
+
+        actions.andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(redirectedUrl("http://localhost/user/3"));
+    }
+
+    @Test
     public void getUserInfoList() throws Exception {
 
         mockMvc.perform(get("/user"))
@@ -72,7 +81,6 @@ class UserInfoControllerTest {
     }
 
     @Test
-    @Order(3)
     public void getUserInfo() throws Exception{
         ResultActions actions = mockMvc.perform(get("/user/{id}", 1));
 

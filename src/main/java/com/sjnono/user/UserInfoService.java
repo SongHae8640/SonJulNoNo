@@ -1,8 +1,11 @@
 package com.sjnono.user;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Errors;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -31,5 +34,16 @@ public class UserInfoService {
     public UserInfo findById(Long id) {
         Optional<UserInfo> optionalUserInfo = this.userInfoRepository.findById(id);
         return optionalUserInfo.get();
+    }
+
+    public UserInfo joinUser(UserInfo userInfo, Errors errors) {
+        UserInfo existUserInfo = this.userInfoRepository.findByEmail(userInfo.getEmail());
+        if (!Objects.isNull(existUserInfo)){
+            errors.reject("Registered member");
+            return userInfo;
+        }
+
+        return this.userInfoRepository.save(userInfo);
+
     }
 }
