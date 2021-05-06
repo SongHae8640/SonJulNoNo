@@ -13,31 +13,32 @@
     <div class="main">
         <div class="col-md-6 col-sm-12">
             <div class="login-form">
-                <form action="/user" method="post">
+                <form id='joinForm'>
                     <div class="form-group">
                         <label>이름</label>
-                        <input type="text" class="form-control" placeholder="이름">
+                        <input type="text" id="name" class="form-control" placeholder="이름">
                     </div>
                     <div class="form-group">
                         <label>이메일</label>
-                        <input type="text" class="form-control" placeholder="이메일">
+                        <input type="text" id="email" class="form-control" placeholder="이메일">
                     </div>
                     <div class="form-group">
                         <label>패스워드</label>
-                        <input type="password" class="form-control" placeholder="패스워드">
+                        <input type="password" id="password" class="form-control" placeholder="패스워드">
                     </div>
                     <div class="form-group">
                         <label>패스워드 확인</label>
-                        <input type="password" class="form-control" placeholder="패스워드">
+                        <input type="password" id="rePassword" class="form-control" placeholder="패스워드">
                     </div>
-                    <button type="submit" class="btn btn-secondary">회원가입</button>
+                    <button id="join" class="btn btn-secondary">회원가입</button>
                 </form>
             </div>
         </div>
     </div>
-
 </div>
 
+
 <th:block th:replace="fragments/footer"></th:block>
+<script type="module" src="js/apps.js"></script>
 </body>
 </html>

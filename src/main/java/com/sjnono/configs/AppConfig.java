@@ -12,11 +12,8 @@ public class AppConfig {
     public ModelMapper modelMapper(){
         ModelMapper modelMapper = new ModelMapper();
 
-        /*연결 전략 : 같은 타입의 필드명이 같은 경우만 동작*/
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         return modelMapper;
     }
 
-    //@Bean
-    //public Errors errors
 }

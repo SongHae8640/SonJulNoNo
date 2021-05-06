@@ -34,7 +34,7 @@ public class UserInfoController {
 
     @GetMapping("/{id}")
     public ModelAndView getUserInfo(@PathVariable("id") Long id){
-        ModelAndView mav = new ModelAndView("main");
+        ModelAndView mav = new ModelAndView("index");
         UserInfo userInfo = this.userInfoService.findById(id);
 
         mav.addObject(userInfo);
@@ -56,6 +56,7 @@ public class UserInfoController {
                                         , Errors errors){
         userValidator.joinValidate(userInfoDto, errors);
         if (errors.hasErrors()){
+
             return badRequest(errors);
         }
 
@@ -72,7 +73,7 @@ public class UserInfoController {
         UserInfoResource userInfoResource = new UserInfoResource(validUserInfo, selfLinkBuilder.withSelfRel());
 
 
-        return created(createdUri).body(userInfoResource);
+        return ResponseEntity.created(createdUri).body(userInfoResource);
     }
 
     @GetMapping("/login")
