@@ -1,10 +1,10 @@
 import View from './View.js'
 
-const tag = '[FormView]'
+const tag = '[JoinFormView]'
 
-const FormView = Object.create(View)
+const JoinFormView = Object.create(View)
 
-FormView.setup = function (el) {
+JoinFormView.setup = function (el) {
     console.log(tag,"setup() :: el = ", el)
     this.init(el)
     this.name = el.querySelector('#name')
@@ -20,13 +20,13 @@ FormView.setup = function (el) {
     return this
 }
 
-FormView.bindEvent = function (){
+JoinFormView.bindEvent = function (){
     console.log(tag,'bindEvent()')
     this.on('submit', e => e.preventDefault())
     this.joinEl.addEventListener('click', e => this.onClickJoin())
 }
 
-FormView.onClickJoin = function (){
+JoinFormView.onClickJoin = function (){
     console.log(tag,'onClickJoin()')
     var userInfo = {
                     name  : this.name.value,
@@ -38,7 +38,7 @@ FormView.onClickJoin = function (){
 
 }
 
-FormView.setTestInputValue = function (){
+JoinFormView.setTestInputValue = function (){
     console.log(tag, 'setTestInputValue()')
     this.name.value = 'Test'
     this.email.value = 'test@naver.com'
@@ -46,4 +46,4 @@ FormView.setTestInputValue = function (){
     this.rePassword.value = '1234'
 }
 
-export default FormView
+export default JoinFormView

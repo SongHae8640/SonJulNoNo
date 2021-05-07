@@ -13,19 +13,18 @@
     <div class="main">
         <div class="col-md-6 col-sm-12">
             <div class="login-form">
-                <form action="/user/login" method="post">
+                <form id="loginForm">
                     <div class="form-group">
                         <label>User Name</label>
-                        <input type="text" class="form-control" placeholder="User Name">
+                        <input id="name" type="text" class="form-control" placeholder="User Name">
                     </div>
                     <div class="form-group">
                         <label>Password</label>
-                        <input type="password" class="form-control" placeholder="Password">
+                        <input id="password" type="password" class="form-control" placeholder="Password">
                     </div>
-                    <button type="submit" class="btn btn-black">Login</button>
-
+                    <button id="login" class="btn btn-black">Login</button>
+                    <button id="join" class="btn btn-black">join</button>
                 </form>
-                <a href="/user/join" class="btn btn-secondary" >Register</a>
             </div>
         </div>
     </div>
@@ -33,8 +32,9 @@
 </div>
 
 <th:block th:replace="fragments/footer"></th:block>
+<script type="module" src="js/apps.js"></script>
 </body>
 </html>
 
 
- 
+
