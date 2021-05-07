@@ -11,8 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -56,21 +55,56 @@ class UserInfoControllerTest {
     public void joinExistUserInfo() throws Exception{
         //기존 데이터
         UserInfoDto userInfoDto = UserInfoDto.builder()
-                .email("1@naver.com")   //회원 가입한 email
-                .name("Song")
+                .name("defaultName1")
                 .password("1234")
                 .rePassword("1234")
+                .email("defaultMail1@sjnn.com")   //회원 가입한 email
                 .build();
 
 
-        ResultActions actions = mockMvc.perform(post("/user")
+        ResultActions resultActions = mockMvc.perform(post("/user")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userInfoDto)))
                 ;
 
-        actions.andDo(print())
+        resultActions.andDo(print())
                 .andExpect(status().isBadRequest())
                 .andExpect(redirectedUrl("http://localhost/user/3"));
+    }
+
+    @Test
+    public void loginExistUserInfo() throws Exception{
+        UserInfoDto existUserInfo = UserInfoDto.builder()
+                                    .name("defaultName1")
+                                    .password("1234")
+                                    .build();
+
+        ResultActions resultActions = mockMvc.perform(post("/user/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(existUserInfo)));
+
+        resultActions.andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(redirectedUrl("http://localhost/user/1"));
+
+
+    }
+
+    @Test
+    public void loginNonExistUserInfo() throws Exception{
+        UserInfoDto existUserInfo = UserInfoDto.builder()
+                .name("defaultName0")
+                .password("1234")
+                .build();
+
+        ResultActions resultActions = mockMvc.perform(post("/user/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(existUserInfo)));
+
+        resultActions.andDo(print())
+                .andExpect(status().isBadRequest());
+
+
     }
 
     @Test

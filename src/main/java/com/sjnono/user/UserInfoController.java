@@ -11,11 +11,9 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
 import java.net.URI;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
-import static org.springframework.http.ResponseEntity.*;
 
 @Controller
 @RequestMapping("/user")
@@ -52,25 +50,47 @@ public class UserInfoController {
     }
 
     @PostMapping
-    public ResponseEntity insertUserInfo(@RequestBody @Valid UserInfoDto userInfoDto
-                                        , Errors errors){
+    public ResponseEntity insertUserInfo(@RequestBody UserInfoDto userInfoDto, Errors errors){
         userValidator.joinValidate(userInfoDto, errors);
         if (errors.hasErrors()){
 
             return badRequest(errors);
         }
 
-        UserInfo validUserInfo = modelMapper.map(userInfoDto, UserInfo.class);
-        validUserInfo = userInfoService.joinUser(validUserInfo, errors);
+        UserInfo newUserInfo = modelMapper.map(userInfoDto, UserInfo.class);
+        newUserInfo = userInfoService.joinUser(newUserInfo, errors);
         if (errors.hasErrors()){
             return badRequest(errors);
         }
 
 
-        LinkBuilder selfLinkBuilder = linkTo(UserInfoController.class).slash(validUserInfo.getId());
+        LinkBuilder selfLinkBuilder = linkTo(UserInfoController.class).slash(newUserInfo.getId());
         URI createdUri = selfLinkBuilder.toUri();
 
-        UserInfoResource userInfoResource = new UserInfoResource(validUserInfo, selfLinkBuilder.withSelfRel());
+        UserInfoResource userInfoResource = new UserInfoResource(newUserInfo, selfLinkBuilder.withSelfRel());
+
+
+        return ResponseEntity.created(createdUri).body(userInfoResource);
+    }
+    @PostMapping("/login")
+    public ResponseEntity login(@RequestBody UserInfoDto userInfoDto, Errors errors){
+        userValidator.loginValidate(userInfoDto,errors);
+        if(errors.hasErrors()){
+            return badRequest(errors);
+        }
+
+
+        UserInfo loginUserInfo = modelMapper.map(userInfoDto, UserInfo.class);
+        loginUserInfo = userInfoService.loginUser(loginUserInfo, errors);
+        if (errors.hasErrors()){
+            return badRequest(errors);
+        }
+
+
+        LinkBuilder selfLinkBuilder = linkTo(UserInfoController.class).slash(loginUserInfo.getId());
+        URI createdUri = selfLinkBuilder.toUri();
+
+        UserInfoResource userInfoResource = new UserInfoResource(loginUserInfo, selfLinkBuilder.withSelfRel());
 
 
         return ResponseEntity.created(createdUri).body(userInfoResource);
@@ -83,12 +103,8 @@ public class UserInfoController {
         return mav;
     }
 
-    @PostMapping("/login")
-    public ModelAndView login(){
-        ModelAndView mav = new ModelAndView("user/login");
 
-        return mav;
-    }
+
 
 
     private ResponseEntity badRequest(Errors errors) {

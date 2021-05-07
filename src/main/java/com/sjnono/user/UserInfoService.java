@@ -46,4 +46,15 @@ public class UserInfoService {
         return this.userInfoRepository.save(userInfo);
 
     }
+
+    public UserInfo loginUser(UserInfo userInfo, Errors errors) {
+        UserInfo existUserInfo = this.userInfoRepository.findByNameAndPassword(userInfo.getName(), userInfo.getPassword());
+        if (Objects.isNull(existUserInfo)){
+            errors.reject("Not Registered member");
+            return userInfo;
+        }
+
+        return existUserInfo;
+
+    }
 }
