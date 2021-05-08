@@ -13,7 +13,7 @@ public class BbsService {
     @Autowired
     BbsRepository bbsRepository;
 
-    public List<Bbs> showBbsAll(String title) {
+    public List<Bbs> showBbsAll() {
         List<Bbs> bbsList = this.bbsRepository.findAll();
 
         return bbsList;
@@ -27,9 +27,10 @@ public class BbsService {
 
         return bbs;
     }
-
+    @Transactional
     public Bbs writeBbs(Bbs bbs) {
         this.bbsRepository.save(bbs);
+        bbs.getUserInfo();
 
         return bbs;
     }
@@ -39,9 +40,12 @@ public class BbsService {
         this.bbsRepository.deleteById(bbsId);
     }
 
-    public void editBbs(Bbs bbs) {
-        Bbs findBbs = this.bbsRepository.findById(bbs.getId()).get();
-        bbs.setUserInfo(findBbs.getUserInfo());
+    @Transactional
+    public Bbs editBbs(Long bbsId, Bbs bbs) {
+        Bbs editedBbs = this.bbsRepository.findById(bbsId).get();
+        editedBbs.setTitle(bbs.getTitle());
+        editedBbs.setContent(bbs.getContent());
 
+        return editedBbs;
     }
 }

@@ -1,11 +1,23 @@
 package com.sjnono.bbs;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sjnono.user.UserInfoController;
+import com.sjnono.user.UserInfoResource;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.LinkBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Controller
 @RequestMapping("/bbs")
@@ -14,12 +26,27 @@ public class BbsController {
     @Autowired
     BbsService bbsService;
 
+    @Autowired
+    BbsValidator bbsValidator;
+
+    @Autowired
+    ModelMapper modelMapper;
+
     @GetMapping
     public ModelAndView showBbsList(Bbs bbs){
         ModelAndView mav = new ModelAndView("bbs/bbs_list");
-        List<Bbs> bbsList = this.bbsService.showBbsAll(bbs.getTitle());
+        List<Bbs> bbsList = this.bbsService.showBbsAll();
+        List<BbsDto> bbsDtoList = new ArrayList<>();
 
-        mav.addObject(bbsList);
+        for (Bbs tempBbs: bbsList) {
+            BbsDto bbsDto = modelMapper.map(tempBbs, BbsDto.class);
+            bbsDto.setLink( linkTo(BbsController.class).slash(bbsDto.getId()).toString());
+            bbsDtoList.add(bbsDto);
+
+        }
+
+        mav.addObject("bbsList",bbsDtoList);
+
 
         return mav;
     }
@@ -29,40 +56,71 @@ public class BbsController {
         ModelAndView mav = new ModelAndView("bbs/bbs_detail");
 
         Bbs bbs = this.bbsService.findById(bbsId);
-        mav.addObject(bbs);
+        BbsDto bbsDto = modelMapper.map(bbs, BbsDto.class);
+        bbsDto.setLink( linkTo(BbsController.class).slash(bbsDto.getId()).toString());
+        mav.addObject("bbs",bbs);
+
 
         return mav;
 
     }
 
+
     @PostMapping
-    public String writeBbs(@RequestBody Bbs bbs){
+    public ResponseEntity writeBbs(@RequestBody Bbs bbs, Errors errors){
+        this.bbsValidator.writeValidate(bbs, errors);
+        if(errors.hasErrors()){
+            return badRequest(errors);
+        }
         Bbs newBbs = this.bbsService.writeBbs(bbs);
 
-        return "redirect:/bbs/" + newBbs.getId();
+        LinkBuilder selfLinkBuilder = linkTo(BbsController.class).slash(newBbs.getId());
+        URI createdUri = selfLinkBuilder.toUri();
+
+        BbsResource userInfoResource = new BbsResource(newBbs, selfLinkBuilder.withSelfRel());
+
+
+        return ResponseEntity.created(createdUri).body(userInfoResource);
 
     }
 
 
-    @PutMapping("/{bbsId}")
-    public String editBbs(@PathVariable("bbsId") Long bbsId, @RequestBody Bbs bbs){
-        if(!bbs.getId().equals(bbsId)){
 
-        }else{
-            this.bbsService.editBbs(bbs);
+    @PutMapping("/{bbsId}")
+    public ResponseEntity editBbs(@PathVariable("bbsId") Long bbsId, @RequestBody Bbs bbs, Errors errors){
+        this.bbsValidator.editeValidate(bbs, errors);
+        if(errors.hasErrors()){
+            return badRequest(errors);
         }
-        return "redirect:/bbs"+bbs.getId();
+        bbs = this.bbsService.editBbs(bbsId,bbs);
+
+        LinkBuilder selfLinkBuilder = linkTo(BbsController.class).slash(bbs.getId());
+        URI createdUri = selfLinkBuilder.toUri();
+
+        BbsResource userInfoResource = new BbsResource(bbs, selfLinkBuilder.withSelfRel());
+
+
+        return ResponseEntity.created(createdUri).body(userInfoResource);
     }
 
 
     @DeleteMapping("/{bbsId}")
-    public String deleteBbs(@PathVariable("bbsId") Long bbsId){
+    public ResponseEntity deleteBbs(@PathVariable("bbsId") Long bbsId){
 
         this.bbsService.deleteBbs(bbsId);
 
-        return "redirect:/bbs";
+        LinkBuilder selfLinkBuilder = linkTo(BbsController.class);
+        URI createdUri = selfLinkBuilder.toUri();
+
+        BbsResource userInfoResource = new BbsResource(Bbs.builder().build(), selfLinkBuilder.withSelfRel());
+
+
+        return ResponseEntity.created(createdUri).body(userInfoResource);
     }
 
-
+    private ResponseEntity badRequest(Errors errors) {
+        EntityModel<Errors> entityModel = EntityModel.of(errors).add(linkTo(this.getClass()).withSelfRel());
+        return ResponseEntity.badRequest().body(entityModel);
+    }
 
 }

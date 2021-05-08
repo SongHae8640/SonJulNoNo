@@ -1,6 +1,6 @@
 import View from './View.js'
 
-const tag = '[JoinFormView]'
+const tag = '[DetailView]'
 
 const JoinFormView = Object.create(View)
 

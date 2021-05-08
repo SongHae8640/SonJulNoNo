@@ -4,6 +4,8 @@ import UserModel from "../models/UserModel.js";
 
 const tag = '[UserController]'
 
+var userInfo ={}
+
 export default {
     init(){
         console.log(tag, 'init()')
@@ -14,6 +16,8 @@ export default {
             LoginFormView.setup(document.querySelector("#loginForm"))
                 .on('@login', e => this.onLogin(e.detail.input))
         }
+
+        UserModel.getUserInfoCookie()
 
 
 

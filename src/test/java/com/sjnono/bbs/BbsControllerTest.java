@@ -81,14 +81,15 @@ class BbsControllerTest {
 
 
         actions.andDo(print())
-                .andExpect(status().isFound())
+                .andExpect(status().isCreated())
+                .andExpect(redirectedUrl("http://localhost/bbs/3"))
                 ;
 
     }
 
     @Test
     void deleteBbs() throws Exception{
-        ResultActions actions = mockMvc.perform(delete("/bbs/5"));
+        ResultActions actions = mockMvc.perform(delete("/bbs/1"));
 
         actions.andDo(print())
                 ;
@@ -101,6 +102,7 @@ class BbsControllerTest {
                 .id(1L)
                 .title("테스트 제목(수정)")
                 .content("내용 내용(수정)")
+                .userInfo(UserInfo.builder().id(1L).build())
                 .build();
 
         ResultActions actions = mockMvc.perform(put("/bbs/"+bbs.getId())
@@ -110,7 +112,8 @@ class BbsControllerTest {
 
 
         actions.andDo(print())
-                .andExpect(status().isFound())
+                .andExpect(status().isCreated())
+                .andExpect(redirectedUrl("http://localhost/bbs/"+bbs.getId()))
         ;
 
     }
