@@ -13,6 +13,7 @@ public class BbsService {
     @Autowired
     BbsRepository bbsRepository;
 
+
     public List<Bbs> showBbsAll() {
         List<Bbs> bbsList = this.bbsRepository.findAll();
 
