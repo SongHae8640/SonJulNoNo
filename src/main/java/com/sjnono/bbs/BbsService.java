@@ -19,15 +19,19 @@ public class BbsService {
 
         return bbsList;
     }
+
+
     @Transactional
-    public Bbs findById(Long bbsId) {
-        Bbs bbs = this.bbsRepository.findById(bbsId).get();
+    public Bbs findByIdFetchJoin(Long bbsId){
+        Bbs bbs = this.bbsRepository.findByIdFetchJoin(bbsId);
 
         //조회수 +1
         bbs.setHits(bbs.getHits()+1);
 
         return bbs;
     }
+
+
     @Transactional
     public Bbs writeBbs(Bbs bbs) {
         this.bbsRepository.save(bbs);
@@ -38,6 +42,7 @@ public class BbsService {
 
 
     public void deleteBbs(Long bbsId){
+
         this.bbsRepository.deleteById(bbsId);
     }
 

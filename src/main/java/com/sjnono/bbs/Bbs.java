@@ -18,7 +18,7 @@ public class Bbs {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "BBS_SEQ_GEN")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_INFO_ID")
     private UserInfo userInfo;
     private String title;

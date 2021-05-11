@@ -55,7 +55,7 @@ public class BbsController {
     public ModelAndView showBbsDetail(@PathVariable("bbsId") Long bbsId){
         ModelAndView mav = new ModelAndView("bbs/bbs_detail");
 
-        Bbs bbs = this.bbsService.findById(bbsId);
+        Bbs bbs = this.bbsService.findByIdFetchJoin(bbsId);
         BbsDto bbsDto = modelMapper.map(bbs, BbsDto.class);
         bbsDto.setLink( linkTo(BbsController.class).slash(bbsDto.getId()).toString());
         mav.addObject("bbs",bbs);
