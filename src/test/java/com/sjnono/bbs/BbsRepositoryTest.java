@@ -1,5 +1,7 @@
 package com.sjnono.bbs;
 
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sjnono.user.UserInfo;
 import com.sjnono.user.UserInfoRepository;
 import org.assertj.core.api.Assertions;
@@ -11,7 +13,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -35,6 +40,8 @@ class BbsRepositoryTest {
 
     @Autowired
     UserInfoRepository userInfoRepository;
+
+
 
     @Test
     public void showDbConnecion() throws SQLException {
@@ -62,15 +69,7 @@ class BbsRepositoryTest {
 
     }
 
-    @Test
-    public void showBbsData(){
-        List<Bbs> bbsList = this.bbsRepository.findAll();
 
-        for (Bbs bbs : bbsList) {
-            System.out.println(bbs.toString());
-
-        }
-    }
 
 
 

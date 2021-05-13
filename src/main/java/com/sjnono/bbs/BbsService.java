@@ -23,7 +23,8 @@ public class BbsService {
 
     @Transactional
     public Bbs findByIdFetchJoin(Long bbsId){
-        Bbs bbs = this.bbsRepository.findByIdFetchJoin(bbsId);
+        //Bbs bbs = this.bbsRepository.findByIdFetchJoin(bbsId);
+        Bbs bbs = this.bbsRepository.findByIdQueryDsl(bbsId);
 
         //조회수 +1
         bbs.setHits(bbs.getHits()+1);

@@ -92,12 +92,13 @@ public class BbsController {
         if(errors.hasErrors()){
             return badRequest(errors);
         }
-        bbs = this.bbsService.editBbs(bbsId,bbs);
 
-        LinkBuilder selfLinkBuilder = linkTo(BbsController.class).slash(bbs.getId());
+        Bbs editBbs = this.bbsService.editBbs(bbsId,bbs);
+
+        LinkBuilder selfLinkBuilder = linkTo(BbsController.class).slash(editBbs.getId());
         URI createdUri = selfLinkBuilder.toUri();
 
-        BbsResource userInfoResource = new BbsResource(bbs, selfLinkBuilder.withSelfRel());
+        BbsResource userInfoResource = new BbsResource(editBbs, selfLinkBuilder.withSelfRel());
 
 
         return ResponseEntity.created(createdUri).body(userInfoResource);

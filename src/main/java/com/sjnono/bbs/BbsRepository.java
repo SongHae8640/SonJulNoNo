@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BbsRepository extends JpaRepository<Bbs, Long>{
+public interface BbsRepository extends JpaRepository<Bbs, Long> , BbsRepositoryCustom{
 
     List<Bbs> findByTitle(String title);
 

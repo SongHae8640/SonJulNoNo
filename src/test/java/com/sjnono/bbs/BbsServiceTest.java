@@ -14,7 +14,7 @@ class BbsServiceTest {
 
     @Test
     public void getBbs() throws Exception{
-        Bbs bbs = this.bbsService.findById(1l);
+        Bbs bbs = this.bbsService.findByIdFetchJoin(1l);
 
 
     }

@@ -57,7 +57,7 @@ class BbsControllerTest {
     }
 
     @Test
-    void showBbsDetail() throws Exception{
+    void  showBbsDetail() throws Exception{
         ResultActions actions = mockMvc.perform(get("/bbs/1"));
 
         actions.andDo(print())
@@ -100,8 +100,8 @@ class BbsControllerTest {
     void editBbs() throws Exception{
         Bbs bbs = Bbs.builder()
                 .id(1L)
-                .title("테스트 제목(수정)")
-                .content("내용 내용(수정)")
+                .title("title edit test")
+                .content("content edit test")
                 .userInfo(UserInfo.builder().id(1L).build())
                 .build();
 
