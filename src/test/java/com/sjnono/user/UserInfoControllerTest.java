@@ -68,8 +68,7 @@ class UserInfoControllerTest {
                 ;
 
         resultActions.andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(redirectedUrl("http://localhost/user/3"));
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -120,8 +119,8 @@ class UserInfoControllerTest {
 
         actions.andExpect(status().isOk())
                 .andExpect(model().attribute("userInfo", hasProperty("id" , is(1L))))
-                .andExpect(model().attribute("userInfo", hasProperty("email" , is("test@gmail.com"))))
-                .andExpect(model().attribute("userInfo", hasProperty("name" , is("Song"))))
+                .andExpect(model().attribute("userInfo", hasProperty("email" , is("defaultMail1@sjnn.com"))))
+                .andExpect(model().attribute("userInfo", hasProperty("name" , is("defaultName1"))))
                 .andExpect(model().attribute("userInfo", hasProperty("password" , is("1234"))))
                 ;
     }

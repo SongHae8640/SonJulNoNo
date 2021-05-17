@@ -17,27 +17,26 @@ export default {
                 .on('@login', e => this.onLogin(e.detail.input))
         }
 
-        UserModel.getUserInfoCookie()
-
-
-
-
 
     },
 
     onJoin(data){
         console.log(tag, 'onJoin(data)', data)
-        UserModel.join(data).then( req =>{
-            this.onJoinResult(req)
+        UserModel.joinFetch(data).then( data =>{
+            this.onJoinSuccessResult(data)
         }).catch(function (err){
-            console.log(tag,"onJoin() error")
+            this.onJoinErrorResult(err)
         })
     },
 
-    onJoinResult(req){
+    onJoinSuccessResult(req){
         console.log(tag, 'onJoinResult(req)',req)
-        location.href = req._links.self.href;
+        console.log(tag, 'onJoinResult(req)',req.json)
+        //location.href = req._links.self.href;
 
+    },
+    onJoinErrorResult(err){
+        console.log(tag, 'onJoinError(err)',err)
     },
 
     onLogin(data){
